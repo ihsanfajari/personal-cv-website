@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#7ec8e3" />
+  <title>Ihsan Fajari — Off-Road CV</title>
+  <meta name="description" content="Interactive 3D off-road CV of Ihsan Fajari. Drive around a low-poly island and discover his experience, projects and skills." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚙</text></svg>" />
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <!-- Intro / start screen -->
+  <div id="intro" class="overlay">
+    <div class="intro-card">
+      <div class="intro-badge">INTERACTIVE CV · OFF-ROAD EDITION</div>
+      <h1>Ihsan <span>Fajari</span></h1>
+      <p class="intro-sub">Associate Production Director · Bandung, Indonesia</p>
+      <p class="intro-desc">
+        Hop in the truck and explore the island. Five glowing waypoints are scattered
+        across the forest, desert, snowy peaks and the beach — each one unlocks a part of my résumé.
+      </p>
+      <div class="intro-controls">
+        <div class="ctrl desktop-only"><span class="keys">W A S D</span> Drive</div>
+        <div class="ctrl desktop-only"><span class="keys">SPACE</span> Brake / Reverse</div>
+        <div class="ctrl desktop-only"><span class="keys">R</span> Reset truck</div>
+        <div class="ctrl mobile-only"><span class="keys">🕹️</span> Joystick on the left side of the screen</div>
+      </div>
+      <button id="startBtn">START ENGINE&nbsp;&nbsp;🚙💨</button>
+      <div class="intro-foot">
+        <a href="/Resume-Ihsan-Fajari.pdf" download>⬇ Download classic PDF résumé</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading indicator -->
+  <div id="loading" class="overlay" style="display:none">
+    <div class="loading-box"><div class="spinner"></div>Building the island…</div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud" style="display:none">
+    <div id="hud-top">
+      <div id="hud-left">
+        <div id="hud-name">
+          <strong>IHSAN FAJARI</strong>
+          <span>Associate Production Director</span>
+        </div>
+        <div id="quest">
+          <span id="quest-arrow">➤</span>
+          <span id="quest-text">0/5 waypoints</span>
+        </div>
+      </div>
+      <div id="hud-progress"></div>
+    </div>
+    <div id="hud-bottom">
+      <div id="speedo"><span id="speedVal">0</span><small>km/h</small><div id="odo">0.00 km</div></div>
+      <div id="hint"></div>
+      <button id="resetBtn" title="Reset truck (R)">↺</button>
+      <button id="muteBtn" title="Sound settings">🔊</button>
+      <button id="trophyBtn" title="Achievements">🏆</button>
+      <button id="photoBtn" title="Photo mode — save a postcard">📸</button>
+      <div id="ach-menu" style="display:none">
+        <div class="sm-title">🏆 Achievements <span id="ach-count"></span><button id="ach-close">✕</button></div>
+        <div id="ach-list"></div>
+        <div id="garage-title">🎨 Garage — paint unlocks with achievements</div>
+        <div id="skin-list"></div>
+      </div>
+      <div id="sound-menu" style="display:none">
+        <div class="sm-title">🎚️ Sound Settings <button id="sound-close">✕</button></div>
+        <label class="sm-row">
+          <span>🎵 Music</span>
+          <input id="bgmSlider" type="range" min="0" max="100" step="1" />
+          <b id="bgmPct">100%</b>
+        </label>
+        <label class="sm-row">
+          <span>🚙 SFX</span>
+          <input id="sfxSlider" type="range" min="0" max="100" step="1" />
+          <b id="sfxPct">100%</b>
+        </label>
+        <button id="muteToggle" class="sm-mute">🔇 Mute all</button>
+      </div>
+    </div>
+    <div id="toast"></div>
+    <div id="edge-markers"></div>
+  </div>
+
+  <!-- CV panel -->
+  <div id="panel" style="display:none">
+    <div id="panel-card">
+      <button id="panel-close">✕</button>
+      <div id="panel-content"></div>
+    </div>
+  </div>
+
+  <!-- Mobile joystick -->
+  <div id="joystick-zone">
+    <div id="joystick-base" style="display:none">
+      <div id="joystick-knob"></div>
+    </div>
+  </div>
+
+  <!-- Rotate device notice -->
+  <div id="rotate" class="overlay" style="display:none">
+    <div class="rotate-box">📱↻<br/>Rotate your phone to landscape<br/>for the best driving experience</div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

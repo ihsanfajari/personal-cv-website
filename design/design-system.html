@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rally Roadbook — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Work+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+
+/* =========================================================
+   TOKENS
+   ========================================================= */
+:root{
+  /* paper & ink */
+  --paper:        #f7efdc;
+  --paper-raised: #fffaf0;
+  --paper-dim:    #efe3c4;
+  --ink:          #202e3d;
+  --ink-soft:     #55697c;
+  --ink-faint:    #8b96a3;
+  --line:         rgba(32,46,61,.16);
+  --line-strong:  rgba(32,46,61,.34);
+
+  /* accents */
+  --rust:       #c8492e;
+  --rust-deep:  #9c3720;
+  --ochre:      #d99a34;
+  --ochre-deep: #a9721c;
+  --forest:     #4b7a55;
+  --teal:       #3c7c88;
+
+  /* zone accents — same hues used in-game, harmonized to the paper palette */
+  --zone-about:      var(--ochre);
+  --zone-experience: var(--forest);
+  --zone-projects:   var(--rust);
+  --zone-skills:     var(--teal);
+  --zone-education:  #c98a2e;
+
+  /* type */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'Work Sans', system-ui, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+
+  /* spacing (4px base) */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px; --sp-8:64px;
+
+  /* radius */
+  --r-sm:6px; --r-md:12px; --r-lg:20px; --r-pill:999px;
+
+  /* hard, printed-poster shadows — no soft AI glow */
+  --shadow-sm: 3px 3px 0 rgba(32,20,10,.9);
+  --shadow-md: 5px 5px 0 rgba(32,20,10,.9);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+  font-family: var(--font-body);
+  background: var(--paper-dim);
+  color: var(--ink);
+  line-height: 1.5;
+  padding-bottom: var(--sp-8);
+}
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background-image: var(--grain);
+  opacity:.05;
+  mix-blend-mode:multiply;
+  pointer-events:none;
+  z-index:1;
+}
+
+.icon{ width:1em; height:1em; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; vertical-align:-0.15em; }
+
+/* =========================================================
+   LAYOUT SHELL
+   ========================================================= */
+.wrap{ max-width: 1080px; margin: 0 auto; padding: 0 var(--sp-5); }
+
+.ds-hero{
+  background:
+    radial-gradient(900px 420px at 15% -10%, rgba(255,255,255,.5), transparent 60%),
+    linear-gradient(160deg, #efd9a6, var(--paper) 55%);
+  border-bottom: 2px solid var(--ink);
+  padding: var(--sp-8) 0 var(--sp-6);
+  position: relative; z-index: 2;
+}
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  color: var(--paper-raised);
+  background: var(--ink);
+  padding: 6px 12px;
+  transform: rotate(-1.4deg);
+  box-shadow: var(--shadow-sm);
+}
+.ds-hero h1{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(34px, 5.4vw, 56px);
+  letter-spacing: -.01em;
+  margin: var(--sp-4) 0 var(--sp-2);
+  max-width: 14ch;
+}
+.ds-hero h1 em{ font-style: italic; color: var(--rust); }
+.ds-hero p{ max-width: 62ch; color: var(--ink-soft); font-size: 15.5px; }
+
+.principles{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: var(--sp-4); margin-top: var(--sp-6); }
+.principle{
+  background: var(--paper-raised);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  box-shadow: var(--shadow-sm);
+}
+.principle .no{ font-family: var(--font-mono); font-size:11px; color: var(--rust); font-weight:600; letter-spacing:.08em; }
+.principle h3{ font-family: var(--font-display); font-size: 17px; font-weight:600; margin: 4px 0 6px; }
+.principle p{ font-size: 12.8px; color: var(--ink-soft); }
+
+nav.toc{
+  position: sticky; top:0; z-index: 30;
+  background: rgba(247,239,220,.94);
+  backdrop-filter: blur(6px);
+  border-bottom: 1.5px solid var(--line-strong);
+}
+nav.toc .wrap{ display:flex; gap: var(--sp-4); overflow-x:auto; padding-top: var(--sp-3); padding-bottom: var(--sp-3); }
+nav.toc a{
+  font-family: var(--font-mono);
+  font-size: 11.5px; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+  color: var(--ink-soft); text-decoration:none; white-space:nowrap;
+  padding: 4px 2px; border-bottom: 2px solid transparent;
+}
+nav.toc a:hover{ color: var(--ink); border-color: var(--rust); }
+
+section.ds{ position:relative; z-index:2; padding: var(--sp-8) 0 0; }
+section.ds h2{
+  font-family: var(--font-display);
+  font-size: 26px; font-weight:700;
+  display:flex; align-items:baseline; gap: 10px;
+}
+section.ds h2 .tag{ font-family: var(--font-mono); font-size:11px; color: var(--ink-faint); font-weight:600; }
+section.ds > .desc{ color: var(--ink-soft); font-size: 13.5px; max-width: 64ch; margin: 6px 0 var(--sp-5); }
+.route-rule{
+  height: 0; border-top: 2px dashed var(--line-strong); margin: var(--sp-3) 0 var(--sp-5);
+}
+
+/* =========================================================
+   COLOR
+   ========================================================= */
+.swatches{ display:grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: var(--sp-3); }
+.swatch{ border:1.5px solid var(--ink); border-radius: var(--r-md); overflow:hidden; background:var(--paper-raised); box-shadow: var(--shadow-sm); }
+.swatch .fill{ height: 64px; }
+.swatch .meta{ padding: 8px 10px; }
+.swatch .name{ font-size:12.5px; font-weight:700; }
+.swatch .hex{ font-family: var(--font-mono); font-size:11px; color: var(--ink-soft); }
+.swatch .use{ font-size:11px; color: var(--ink-faint); margin-top:2px; }
+
+/* =========================================================
+   TYPE
+   ========================================================= */
+.type-row{ display:flex; align-items:baseline; gap: var(--sp-4); padding: var(--sp-4) 0; border-bottom: 1px solid var(--line); }
+.type-row:last-child{ border-bottom:none; }
+.type-row .label{ font-family: var(--font-mono); font-size:11px; color: var(--ink-faint); width: 128px; flex:none; text-transform:uppercase; letter-spacing:.06em; }
+.t-display{ font-family: var(--font-display); font-weight:700; }
+.t-body{ font-family: var(--font-body); }
+.t-mono{ font-family: var(--font-mono); }
+
+/* =========================================================
+   SPACING / RADIUS
+   ========================================================= */
+.scale-row{ display:flex; align-items:center; gap: var(--sp-3); margin-bottom: var(--sp-2); font-family: var(--font-mono); font-size:11.5px; color: var(--ink-soft); }
+.scale-bar{ background: var(--rust); height: 14px; }
+.radius-row{ display:flex; gap: var(--sp-4); flex-wrap:wrap; }
+.radius-demo{ width:64px; height:64px; background: var(--ochre); border:1.5px solid var(--ink); display:flex; align-items:flex-end; justify-content:center; font-family:var(--font-mono); font-size:10px; padding-bottom:4px; }
+
+/* =========================================================
+   TEXTURE / MOTIFS
+   ========================================================= */
+.motif-grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: var(--sp-4); }
+.motif{ border:1.5px solid var(--ink); border-radius: var(--r-md); background: var(--paper-raised); box-shadow: var(--shadow-sm); overflow:hidden; }
+.motif .demo{ height:88px; display:flex; align-items:center; justify-content:center; }
+.motif .label{ padding:8px 10px; font-size:11.5px; color: var(--ink-soft); border-top:1px solid var(--line); font-family:var(--font-mono); }
+.m-grain{ background: var(--paper); position:relative; }
+.m-grain::after{ content:""; position:absolute; inset:0; background-image:var(--grain); opacity:.16; mix-blend-mode:multiply; }
+.m-dashed{ border: 2px dashed var(--line-strong); margin:10px; border-radius: var(--r-md); }
+.m-stamp{
+  width:70px; height:70px; border-radius:50%;
+  border: 2px dashed var(--rust);
+  display:flex; align-items:center; justify-content:center;
+  color: var(--rust); transform: rotate(-8deg);
+}
+.m-ticket{
+  width: 84%; height: 46px; background: var(--rust); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;
+  clip-path: polygon(0 0,6% 50%,0 100%,100% 100%,94% 50%,100% 0);
+}
+.m-ticks{ width:84%; height:1px; background:var(--ink); position:relative; }
+.m-ticks::before{
+  content:""; position:absolute; left:0; right:0; top:-8px; height:8px;
+  background-image: repeating-linear-gradient(90deg, var(--ink) 0 1.5px, transparent 1.5px 10px);
+}
+
+/* =========================================================
+   ICONS
+   ========================================================= */
+.icon-grid{ display:grid; grid-template-columns: repeat(auto-fill,minmax(96px,1fr)); gap: var(--sp-3); }
+.icon-cell{
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  padding: var(--sp-4) var(--sp-2);
+  background: var(--paper-raised); border:1.5px solid var(--ink); border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+.icon-cell .icon{ width:26px; height:26px; }
+.icon-cell span{ font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-soft); }
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+.row{ display:flex; gap: var(--sp-4); flex-wrap:wrap; align-items:center; }
+.btn{
+  font: inherit; font-family: var(--font-body); font-weight:700; font-size:14px;
+  border: 2px solid var(--ink); border-radius: var(--r-md);
+  padding: 12px 22px; cursor:pointer;
+  background: var(--paper-raised); color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  display:inline-flex; align-items:center; gap:8px;
+  transition: transform .1s, box-shadow .1s;
+}
+.btn:hover{ transform: translate(-2px,-2px); box-shadow: 5px 5px 0 rgba(32,20,10,.9); }
+.btn:active{ transform: translate(1px,1px); box-shadow: 1px 1px 0 rgba(32,20,10,.9); }
+.btn-primary{ background: var(--rust); color: #fff; border-color: var(--rust-deep); }
+.btn-ghost{ background: transparent; }
+.btn-sm{ padding: 8px 14px; font-size:12.5px; }
+.btn-round{
+  width:46px; height:46px; border-radius:50%; padding:0; justify-content:center;
+  background: var(--paper-raised);
+}
+.btn-round .icon{ width:19px; height:19px; }
+
+/* =========================================================
+   CHIPS / TAGS
+   ========================================================= */
+.chip{
+  display:inline-flex; align-items:center; gap:6px;
+  font-family: var(--font-mono); font-size:11px; font-weight:600; letter-spacing:.03em;
+  padding: 6px 12px; border-radius: var(--r-pill);
+  border: 1.5px dashed var(--ink-faint); color: var(--ink-soft);
+}
+.chip .icon{ width:13px; height:13px; }
+.chip.found{ border-style:solid; border-color: var(--ink); background: var(--paper-raised); color: var(--ink); box-shadow: 2px 2px 0 rgba(32,20,10,.85); }
+
+.tag{
+  display:inline-block; font-family: var(--font-mono); font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.04em;
+  background: var(--paper-raised); border:1px solid var(--line-strong);
+  padding: 4px 9px; border-radius: 5px; color: var(--ink-soft);
+}
+
+.badge-stamp{
+  display:inline-flex; align-items:center; gap:7px;
+  font-family: var(--font-mono); font-size:10.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color: var(--paper-raised); background: var(--ink);
+  padding: 6px 13px; transform: rotate(-1.6deg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+.card-grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: var(--sp-5); }
+.postcard{
+  position:relative;
+  background: var(--paper-raised);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--shadow-md);
+}
+.postcard::before{
+  content:""; position:absolute; left:var(--sp-5); right:var(--sp-5); top:0;
+  border-top: 2px dashed var(--line-strong);
+}
+.stamp-corner{
+  position:absolute; top:-14px; right:18px;
+  width:56px; height:56px; border-radius:50%;
+  background: var(--paper); border:2px dashed var(--zone-c, var(--rust));
+  display:flex; align-items:center; justify-content:center;
+  color: var(--zone-c, var(--rust));
+  transform: rotate(6deg);
+}
+.stamp-corner .icon{ width:22px; height:22px; }
+.postcard .eyebrow-sm{ font-family:var(--font-mono); font-size:10.5px; color:var(--zone-c,var(--rust)); font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+.postcard h3{ font-family: var(--font-display); font-size:20px; font-weight:700; margin:6px 0 8px; }
+.postcard p{ font-size:13px; color: var(--ink-soft); }
+
+/* =========================================================
+   STAT READOUT
+   ========================================================= */
+.readout{
+  display:inline-flex; flex-direction:column; align-items:center;
+  background: var(--paper-raised); border:1.5px solid var(--ink); border-radius: var(--r-md);
+  padding: 10px 26px 12px; box-shadow: var(--shadow-sm);
+}
+.readout .val{ font-family: var(--font-mono); font-weight:600; font-size:30px; letter-spacing:-.02em; }
+.readout .unit{ font-family: var(--font-mono); font-size:10px; color: var(--ink-faint); letter-spacing:.16em; text-transform:uppercase; }
+.readout .ticks{ width:100%; height:6px; margin-top:6px; background-image: repeating-linear-gradient(90deg, var(--ink) 0 1.4px, transparent 1.4px 7px); opacity:.5; }
+
+/* =========================================================
+   SLIDER
+   ========================================================= */
+.slider-row{ display:grid; grid-template-columns: 90px 1fr 44px; align-items:center; gap: var(--sp-3); font-size:12.5px; font-weight:700; color: var(--ink-soft); max-width:340px; margin-bottom: var(--sp-3); }
+.slider-row .lbl{ display:inline-flex; align-items:center; gap:7px; }
+.slider-row b{ text-align:right; font-family: var(--font-mono); font-weight:600; color: var(--ink-faint); }
+input[type="range"]{ -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:99px; background: var(--line-strong); background-image: repeating-linear-gradient(90deg, var(--ink) 0 1.5px, transparent 1.5px 9px); background-size: 100% 2px; background-repeat:no-repeat; background-position:center; outline:none; cursor:pointer; }
+input[type="range"]::-webkit-slider-thumb{ -webkit-appearance:none; width:20px; height:20px; border-radius:50%; background: var(--rust); border:3px solid var(--paper-raised); box-shadow: 0 0 0 1.5px var(--ink); }
+
+/* =========================================================
+   PANEL SAMPLE
+   ========================================================= */
+.panel-demo{
+  background: var(--paper-raised); border:1.5px solid var(--ink); border-radius: var(--r-lg);
+  max-width: 380px; box-shadow: var(--shadow-md); overflow:hidden;
+}
+.panel-demo .head{ display:flex; align-items:center; justify-content:space-between; padding: var(--sp-4) var(--sp-5) var(--sp-3); border-bottom:2px dashed var(--line-strong); }
+.panel-demo .head b{ font-family:var(--font-display); font-size:17px; }
+.panel-demo .body{ padding: var(--sp-4) var(--sp-5) var(--sp-5); font-size:13px; color:var(--ink-soft); }
+.x-close{ width:28px; height:28px; border-radius:50%; border:1.5px solid var(--ink); background:var(--paper); display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.x-close .icon{ width:13px; height:13px; }
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+.toast-demo{ display:inline-flex; align-items:center; gap:8px; background: var(--rust); color:#fff; font-weight:700; font-size:13px; padding:10px 18px 10px 14px; clip-path: polygon(0 0,4% 50%,0 100%,100% 100%,100% 0); box-shadow: var(--shadow-sm); }
+.toast-demo .icon{ width:15px; height:15px; }
+
+/* =========================================================
+   ACHIEVEMENT ROW
+   ========================================================= */
+.ach-list{ display:flex; flex-direction:column; gap:8px; max-width:360px; }
+.ach{ display:flex; gap:12px; align-items:center; padding:10px 12px; border-radius: var(--r-md); border:1.5px dashed var(--line-strong); }
+.ach .stamp{ width:38px; height:38px; border-radius:50%; border:1.5px dashed var(--ink-faint); display:flex; align-items:center; justify-content:center; color:var(--ink-faint); flex:none; }
+.ach b{ display:block; font-size:12.5px; letter-spacing:.03em; color: var(--ink-faint); }
+.ach p{ font-size:11.5px; color: var(--ink-faint); font-style:italic; }
+.ach.done{ border-style:solid; border-color: var(--ink); background: var(--paper-raised); box-shadow: 2px 2px 0 rgba(32,20,10,.85); }
+.ach.done .stamp{ border-style:solid; border-color: var(--ochre-deep); background: var(--ochre); color:#fff; }
+.ach.done b{ color: var(--ink); }
+.ach.done p{ color: var(--ink-soft); font-style:normal; }
+
+/* =========================================================
+   CONTACT LINKS
+   ========================================================= */
+.contact-links{ display:flex; flex-direction:column; gap:8px; max-width:320px; }
+.contact-links a{ display:flex; align-items:center; gap:10px; font-size:13.5px; font-weight:700; color:var(--ink); text-decoration:none; background:var(--paper-raised); border:1.5px solid var(--line-strong); border-radius:10px; padding:10px 14px; }
+.contact-links a .icon{ width:16px; height:16px; }
+.contact-links a.primary{ background: var(--rust); border-color:var(--rust-deep); color:#fff; }
+
+footer.ds{ position:relative; z-index:2; text-align:center; padding: var(--sp-8) var(--sp-4) var(--sp-5); color: var(--ink-faint); font-size:12px; font-family: var(--font-mono); }
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="icon-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M15.3 8.7l-2 4.6-4.6 2 2-4.6z" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="icon-flag" viewBox="0 0 24 24"><path d="M6 3v18"/><path d="M6 4.5h12l-2.4 3.3L18 11H6"/></symbol>
+    <symbol id="icon-mountain" viewBox="0 0 24 24"><path d="M2.5 19h19"/><path d="M4 19l6-11 4 6 2-3 4 8"/><circle cx="17.2" cy="6" r="1.5" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="icon-peaks" viewBox="0 0 24 24"><path d="M2.5 19h19"/><path d="M4 19l6-11 4 6 2-3 4 8"/><path d="M9.1 10.9l1.3 1.3M18.3 13.3l.9.9"/></symbol>
+    <symbol id="icon-dunes" viewBox="0 0 24 24"><circle cx="18" cy="6.2" r="2.1" fill="currentColor" stroke="none"/><path d="M2 16.5c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 20h20"/></symbol>
+    <symbol id="icon-palm" viewBox="0 0 24 24"><path d="M12 21V11"/><path d="M12 11c-3-1.2-5 .3-6.7 3M12 11c-3.5-2.1-4.2-5-2.8-7.2M12 11c1-3 3.7-3.9 6.1-2.8M12 11c3 .2 5.1 2.5 5.8 5.2M12 11c1.7-2.5 1.2-5.6-.8-7.5"/><path d="M3.5 21h17"/></symbol>
+    <symbol id="icon-id-card" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.6" cy="11" r="2"/><path d="M5.8 16.2c.6-1.9 4.6-1.9 5.2 0"/><path d="M13.6 10h5M13.6 13h5"/></symbol>
+    <symbol id="icon-camera" viewBox="0 0 24 24"><path d="M4 8h3l1.4-2h7.2L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.3"/></symbol>
+    <symbol id="icon-trophy" viewBox="0 0 24 24"><path d="M7 4h10v4a5 5 0 0 1-10 0V4z"/><path d="M7 5H4a3 3 0 0 0 3 5"/><path d="M17 5h3a3 3 0 0 1-3 5"/><path d="M12 13v3"/><path d="M9 20h6"/><path d="M10 17h4v3h-4z"/></symbol>
+    <symbol id="icon-speaker" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9a4 4 0 0 1 0 6"/><path d="M19.5 7a7.5 7.5 0 0 1 0 10"/></symbol>
+    <symbol id="icon-speaker-mute" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.2 9.3l4.8 5.4"/><path d="M21 9.3l-4.8 5.4"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.6M12 18.4V21M21 12h-2.6M5.6 12H3M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8M18.4 18.4l-1.8-1.8M7.4 7.4 5.6 5.6"/></symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24"><path d="M12 21s7-7.3 7-12a7 7 0 1 0-14 0c0 4.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24"><path d="M5 5l14 14"/><path d="M19 5L5 19"/></symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></symbol>
+    <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3.5 6.5l8.5 7 8.5-7"/></symbol>
+    <symbol id="icon-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H10l-4 4V5z"/></symbol>
+    <symbol id="icon-refresh" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.9-5.4M20 12a8 8 0 0 1-13.9 5.4"/><path d="M18 3v4h-4"/><path d="M6 21v-4h4"/></symbol>
+    <symbol id="icon-gamepad" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="9" rx="4"/><path d="M8 10.5v4M6 12.5h4"/><circle cx="16" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="18.3" cy="13.3" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="icon-truck" viewBox="0 0 24 24"><path d="M2.5 16V10h9l4 4h3.5a1 1 0 0 1 1 1v1"/><path d="M9 10V7h5l3 3"/><circle cx="7.2" cy="17" r="1.8"/><circle cx="17.5" cy="17" r="1.8"/></symbol>
+    <symbol id="icon-link-external" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M14 4h6v6"/><path d="M20 4l-9 9"/></symbol>
+    <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="1.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
+    <symbol id="icon-rotate-device" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="16" rx="1.8"/><path d="M20 8a6 6 0 1 1-2-4.5"/><path d="M20 2.5v4h-4"/></symbol>
+  </defs>
+</svg>
+
+<header class="ds-hero">
+  <div class="wrap">
+    <span class="eyebrow">Design System · v0.1</span>
+    <h1>Rally Roadbook — a <em>printed</em> travel-poster UI for an off-road CV</h1>
+    <p>A direction built to feel like a screen-printed rally roadbook and vintage national-park
+      poster, not a generic AI-generated app. It keeps the site's existing paper/ink/rust palette
+      but replaces every emoji with a drawn line-icon set, swaps soft glow shadows for hard
+      offset "print" shadows, and adds paper grain, dashed route-stitching and rubber-stamp
+      badges as the recurring motifs.</p>
+
+    <div class="principles">
+      <div class="principle"><span class="no">01</span><h3>No emoji as UI</h3><p>Emoji are the fastest tell of an unstyled, AI-default interface. Every icon here is a drawn 24×24 monoline symbol instead.</p></div>
+      <div class="principle"><span class="no">02</span><h3>Hard shadows, not glow</h3><p>Offset 1–2px "printed sticker" shadows replace soft blurred drop-shadows — flatter, more deliberate, less glassy-AI.</p></div>
+      <div class="principle"><span class="no">03</span><h3>A typeface with a voice</h3><p>Fraunces (display) + Work Sans (body) + IBM Plex Mono (data) instead of the default Inter/system-ui pairing.</p></div>
+      <div class="principle"><span class="no">04</span><h3>Texture over gradient</h3><p>Paper grain, dashed stitching and stamp marks stand in for the smooth purple gradients typical of generated UI.</p></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#color">Color</a>
+    <a href="#type">Type</a>
+    <a href="#scale">Spacing</a>
+    <a href="#motif">Texture</a>
+    <a href="#icons">Icons</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#chips">Chips &amp; Tags</a>
+    <a href="#cards">Cards</a>
+    <a href="#readout">Readout</a>
+    <a href="#sliders">Sliders</a>
+    <a href="#panel">Panel</a>
+    <a href="#toast">Toast</a>
+    <a href="#ach">Achievements</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section class="ds" id="color">
+    <h2>Color <span class="tag">/foundations</span></h2>
+    <p class="desc">Warm paper base, ink for text and structure, rust as the single loud accent. Zone hues are pulled from the in-game biome colors but desaturated to sit on paper.</p>
+    <div class="swatches">
+      <div class="swatch"><div class="fill" style="background:var(--paper)"></div><div class="meta"><div class="name">Paper</div><div class="hex">#f7efdc</div><div class="use">App background</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--paper-raised)"></div><div class="meta"><div class="name">Paper Raised</div><div class="hex">#fffaf0</div><div class="use">Cards, panels</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--ink)"></div><div class="meta"><div class="name">Ink</div><div class="hex">#202e3d</div><div class="use">Text, borders</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--rust)"></div><div class="meta"><div class="name">Rust</div><div class="hex">#c8492e</div><div class="use">Primary accent, CTA</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--ochre)"></div><div class="meta"><div class="name">Ochre</div><div class="hex">#d99a34</div><div class="use">Rewards, highlights</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--forest)"></div><div class="meta"><div class="name">Forest</div><div class="hex">#4b7a55</div><div class="use">Zone · Experience</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--teal)"></div><div class="meta"><div class="name">Teal</div><div class="hex">#3c7c88</div><div class="use">Zone · Skills</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--ink-soft)"></div><div class="meta"><div class="name">Ink Soft</div><div class="hex">#55697c</div><div class="use">Secondary text</div></div></div>
+    </div>
+  </section>
+
+  <section class="ds" id="type">
+    <h2>Typography <span class="tag">/foundations</span></h2>
+    <p class="desc">Fraunces gives headlines a printed, editorial-poster warmth. Work Sans stays plain and legible for body copy. IBM Plex Mono is reserved for numbers and data — speed, odometer, coordinates — so readouts feel like a rally trip computer.</p>
+    <div class="type-row"><span class="label">Display / 44</span><span class="t-display" style="font-size:44px">Off-Road CV</span></div>
+    <div class="type-row"><span class="label">H2 / 28</span><span class="t-display" style="font-size:28px;font-weight:700">Work Experience</span></div>
+    <div class="type-row"><span class="label">H3 / 17</span><span class="t-display" style="font-size:17px;font-weight:600">Associate Production Director</span></div>
+    <div class="type-row"><span class="label">Body / 14.5</span><span class="t-body" style="font-size:14.5px">Hop in the truck and explore the island — five waypoints unlock a part of the résumé.</span></div>
+    <div class="type-row"><span class="label">Small / 12</span><span class="t-body" style="font-size:12px;color:var(--ink-soft)">Grass plains — right where you start</span></div>
+    <div class="type-row"><span class="label">Mono / data</span><span class="t-mono" style="font-size:22px;font-weight:600">42<span style="font-size:11px;color:var(--ink-faint)"> KM/H</span></span></div>
+  </section>
+
+  <section class="ds" id="scale">
+    <h2>Spacing &amp; Radius <span class="tag">/foundations</span></h2>
+    <p class="desc">4px base scale. Radius stays modest (6–20px) — rounded enough to feel friendly, never full "bubble" AI-chrome.</p>
+    <div style="margin-bottom:var(--sp-5)">
+      <div class="scale-row"><span style="width:34px">4</span><div class="scale-bar" style="width:4px"></div></div>
+      <div class="scale-row"><span style="width:34px">8</span><div class="scale-bar" style="width:8px"></div></div>
+      <div class="scale-row"><span style="width:34px">12</span><div class="scale-bar" style="width:12px"></div></div>
+      <div class="scale-row"><span style="width:34px">16</span><div class="scale-bar" style="width:16px"></div></div>
+      <div class="scale-row"><span style="width:34px">24</span><div class="scale-bar" style="width:24px"></div></div>
+      <div class="scale-row"><span style="width:34px">32</span><div class="scale-bar" style="width:32px"></div></div>
+      <div class="scale-row"><span style="width:34px">48</span><div class="scale-bar" style="width:48px"></div></div>
+    </div>
+    <div class="radius-row">
+      <div class="radius-demo" style="border-radius:6px">sm</div>
+      <div class="radius-demo" style="border-radius:12px">md</div>
+      <div class="radius-demo" style="border-radius:20px">lg</div>
+      <div class="radius-demo" style="border-radius:999px">pill</div>
+    </div>
+  </section>
+
+  <section class="ds" id="motif">
+    <h2>Texture &amp; Motifs <span class="tag">/foundations</span></h2>
+    <p class="desc">Recurring print-shop details that stand in for gradients and glow: grain, dashed route-stitching, a rubber-stamp circle, a ticket notch, a gauge tick strip.</p>
+    <div class="motif-grid">
+      <div class="motif"><div class="demo m-grain"></div><div class="label">paper grain</div></div>
+      <div class="motif"><div class="demo"><div class="m-dashed" style="width:70%;height:60%"></div></div><div class="label">route-stitch border</div></div>
+      <div class="motif"><div class="demo"><div class="m-stamp"><svg class="icon" style="width:24px;height:24px"><use href="#icon-compass"/></svg></div></div><div class="label">rubber stamp</div></div>
+      <div class="motif"><div class="demo"><div class="m-ticket">DISCOVERED</div></div><div class="label">ticket notch</div></div>
+      <div class="motif"><div class="demo"><div class="m-ticks"></div></div><div class="label">gauge ticks</div></div>
+    </div>
+  </section>
+
+  <section class="ds" id="icons">
+    <h2>Iconography <span class="tag">/replaces emoji</span></h2>
+    <p class="desc">Every 🚙🏆🔊📸✕ in the current build maps to one of these. Monoline, 1.6 stroke, currentColor — themeable and consistent, unlike mismatched emoji glyphs across OSes.</p>
+    <div class="icon-grid">
+      <div class="icon-cell"><svg class="icon"><use href="#icon-truck"/></svg><span>truck</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-trophy"/></svg><span>trophy</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-camera"/></svg><span>camera</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-speaker"/></svg><span>speaker</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-speaker-mute"/></svg><span>mute</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-settings"/></svg><span>settings</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-refresh"/></svg><span>reset</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-gamepad"/></svg><span>joystick</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-compass"/></svg><span>compass</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-pin"/></svg><span>waypoint</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-arrow"/></svg><span>arrow</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-close"/></svg><span>close</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-lock"/></svg><span>locked</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-download"/></svg><span>download</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-mail"/></svg><span>mail</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-chat"/></svg><span>whatsapp</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-link-external"/></svg><span>external link</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-rotate-device"/></svg><span>rotate device</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-id-card"/></svg><span>zone · about</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-mountain"/></svg><span>zone · experience</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-dunes"/></svg><span>zone · projects</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-peaks"/></svg><span>zone · skills</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-palm"/></svg><span>zone · education</span></div>
+      <div class="icon-cell"><svg class="icon"><use href="#icon-flag"/></svg><span>finish</span></div>
+    </div>
+  </section>
+
+  <section class="ds" id="buttons">
+    <h2>Buttons <span class="tag">/components</span></h2>
+    <p class="desc">Hard 3–5px offset shadow instead of a blurred glow; the button visually "lifts" like a screen-printed sticker on hover.</p>
+    <div class="row">
+      <button class="btn btn-primary"><svg class="icon"><use href="#icon-truck"/></svg> Start Engine</button>
+      <button class="btn"><svg class="icon"><use href="#icon-download"/></svg> Download PDF</button>
+      <button class="btn btn-ghost btn-sm">View credits</button>
+      <button class="btn btn-round"><svg class="icon"><use href="#icon-refresh"/></svg></button>
+      <button class="btn btn-round"><svg class="icon"><use href="#icon-speaker"/></svg></button>
+      <button class="btn btn-round"><svg class="icon"><use href="#icon-trophy"/></svg></button>
+      <button class="btn btn-round"><svg class="icon"><use href="#icon-camera"/></svg></button>
+    </div>
+  </section>
+
+  <section class="ds" id="chips">
+    <h2>Chips &amp; Tags <span class="tag">/components</span></h2>
+    <p class="desc">Undiscovered waypoints render as dashed outline "unstamped" chips; found ones become solid, like a passport stamp collected.</p>
+    <div class="row" style="margin-bottom:var(--sp-4)">
+      <span class="chip"><svg class="icon"><use href="#icon-id-card"/></svg> About</span>
+      <span class="chip found"><svg class="icon"><use href="#icon-mountain"/></svg> Experience</span>
+      <span class="chip"><svg class="icon"><use href="#icon-dunes"/></svg> Projects</span>
+      <span class="chip found"><svg class="icon"><use href="#icon-peaks"/></svg> Skills</span>
+    </div>
+    <div class="row" style="margin-bottom:var(--sp-4)">
+      <span class="tag">Jira</span><span class="tag">Agile / Scrum</span><span class="tag">Stakeholder Mgmt</span><span class="tag">JavaScript</span>
+    </div>
+    <div class="row">
+      <span class="badge-stamp">Interactive CV · Off-Road Edition</span>
+    </div>
+  </section>
+
+  <section class="ds" id="cards">
+    <h2>Cards <span class="tag">/components</span></h2>
+    <p class="desc">The résumé "postcard" — a dashed tear-line at the top and a rotated rubber-stamp badge carrying the zone icon and color.</p>
+    <div class="card-grid">
+      <div class="postcard" style="--zone-c:var(--zone-experience)">
+        <div class="stamp-corner"><svg class="icon"><use href="#icon-mountain"/></svg></div>
+        <span class="eyebrow-sm">Work Experience</span>
+        <h3>Associate Production Director</h3>
+        <p>Agate Indonesia · Bandung · Jan 2021 – Present. Leads presales, project operations and AI-augmented production workflows.</p>
+      </div>
+      <div class="postcard" style="--zone-c:var(--zone-projects)">
+        <div class="stamp-corner"><svg class="icon"><use href="#icon-dunes"/></svg></div>
+        <span class="eyebrow-sm">Featured Project</span>
+        <h3>Astra Virtue</h3>
+        <p>Metaverse recruitment platform for Astra Group — real-time candidate/recruiter communication at enterprise scale.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ds" id="readout">
+    <h2>Stat Readout <span class="tag">/components</span></h2>
+    <p class="desc">Mono digits with a faint tick strip underneath — reads like a dashboard gauge printed on paper.</p>
+    <div class="row">
+      <div class="readout"><span class="val">42</span><span class="unit">km/h</span><div class="ticks"></div></div>
+      <div class="readout"><span class="val">3.7</span><span class="unit">km driven</span><div class="ticks"></div></div>
+      <div class="readout"><span class="val">4/5</span><span class="unit">waypoints</span><div class="ticks"></div></div>
+    </div>
+  </section>
+
+  <section class="ds" id="sliders">
+    <h2>Sliders <span class="tag">/components</span></h2>
+    <p class="desc">Tick-marked track, solid ink-ringed thumb — legible against the paper background without the default glossy OS slider.</p>
+    <label class="slider-row"><span class="lbl"><svg class="icon"><use href="#icon-speaker"/></svg> Music</span><input type="range" min="0" max="100" value="70"><b>70%</b></label>
+    <label class="slider-row"><span class="lbl"><svg class="icon"><use href="#icon-truck"/></svg> SFX</span><input type="range" min="0" max="100" value="45"><b>45%</b></label>
+  </section>
+
+  <section class="ds" id="panel">
+    <h2>Panel <span class="tag">/components</span></h2>
+    <p class="desc">Same postcard shell used for the résumé panel and the achievements popup — dashed rule under the header instead of a solid divider.</p>
+    <div class="panel-demo">
+      <div class="head"><b>Achievements</b><button class="x-close"><svg class="icon"><use href="#icon-close"/></svg></button></div>
+      <div class="body">
+        <div class="ach-list">
+          <div class="ach done"><div class="stamp"><svg class="icon"><use href="#icon-compass"/></svg></div><div><b>First Mile</b><p>Drive 1km from the start</p></div></div>
+          <div class="ach"><div class="stamp"><svg class="icon"><use href="#icon-mountain"/></svg></div><div><b>Summit</b><p>Reach the highest peak</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ds" id="toast">
+    <h2>Toast <span class="tag">/components</span></h2>
+    <p class="desc">A ticket-stub notch replaces the pill-shaped gradient toast — reads as a stamped notification, not a chat bubble.</p>
+    <div class="toast-demo"><svg class="icon"><use href="#icon-pin"/></svg> Experience discovered! (2/5)</div>
+  </section>
+
+  <section class="ds" id="ach">
+    <h2>Achievement Rows <span class="tag">/components</span></h2>
+    <p class="desc">Locked rows stay outline-only and desaturated; unlocked rows fill solid with an ochre stamp — legible progress state without relying on a padlock emoji.</p>
+    <div class="ach-list">
+      <div class="ach done"><div class="stamp"><svg class="icon"><use href="#icon-compass"/></svg></div><div><b>First Mile</b><p>Drive 1km from the start</p></div></div>
+      <div class="ach"><div class="stamp"><svg class="icon"><use href="#icon-lock"/></svg></div><div><b>???</b><p>Keep exploring to unlock</p></div></div>
+    </div>
+  </section>
+
+  <section class="ds" id="contact">
+    <h2>Contact Links <span class="tag">/components</span></h2>
+    <p class="desc">Icon + label rows on index-card paper; the primary contact method (email) fills solid rust, the rest stay outlined.</p>
+    <div class="contact-links">
+      <a class="primary" href="#"><svg class="icon"><use href="#icon-mail"/></svg> ihsan.fajari@gmail.com</a>
+      <a href="#"><svg class="icon"><use href="#icon-chat"/></svg> +62 822-4027-0827</a>
+      <a href="#"><svg class="icon"><use href="#icon-link-external"/></svg> LinkedIn / ihsanfajari</a>
+      <a href="#"><svg class="icon"><use href="#icon-download"/></svg> Download PDF résumé</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ds">Rally Roadbook Design System — exploration, not yet wired into the game · design/design-system.html</footer>
+
+</body>
+</html>
