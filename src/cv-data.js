@@ -45,19 +45,29 @@ export const CV_ZONES = [
       <h2>Work Experience</h2>
 
       <h3>Associate Production Director</h3>
-      <p class="meta" style="--zone-c:#4b7a55">Agate Indonesia · Bandung · Jan 2021 – Present</p>
+      <p class="meta" style="--zone-c:#4b7a55">Agate Indonesia · Bandung · Early 2025 – Present</p>
       <ul>
-        <li>Lead presales for potential projects: solution ideation, proposal detailing, pricing strategy and timeline estimation.</li>
-        <li>Direct all project operations in the Gamification Division — multiple simultaneous projects from kickoff to delivery.</li>
-        <li>Spearhead AI-augmented workflows across creative and development teams, cutting production iteration time.</li>
-        <li>Manage crew workload balance to maintain team health and retention.</li>
+        <li>Promoted from Project Manager to own delivery across Agate's full B2B enterprise portfolio — budget, timeline and quality across concurrent engagements at the division level, not one project at a time.</li>
+        <li>Drive adoption of AI-augmented workflows across creative and development teams, cutting production iteration time.</li>
+        <li>Set delivery standards and escalation processes at the division level; manage resourcing and workload balance across simultaneous projects.</li>
+        <li>Built internal programs to protect team health and retention.</li>
+        <li><b>Key delivery — Grab, Magical Airport Experience:</b> led a minigame capturing the chaos of pre-flight prep, produced through a full AI-augmented art, design and development pipeline — a showcase of the division's AI-adoption push.</li>
+      </ul>
+
+      <h3>Project Manager</h3>
+      <p class="meta" style="--zone-c:#4b7a55">Agate Indonesia · Bandung · Jan 2021 – Early 2025</p>
+      <ul>
+        <li>Owned end-to-end client relationships from presales through delivery: solution scoping, proposal detailing, pricing strategy and timeline negotiation with enterprise stakeholders.</li>
+        <li>Main point of contact for enterprise clients including Astra Group — translating business requirements into scoped deliverables and managing expectations through the project lifecycle.</li>
+        <li>Delivered projects on agreed budget, timeline and quality; key deliveries include Astra Virtue, Venhall, the Lenovo Personality Quiz microsite and Health Heroes: Nutrihunt.</li>
       </ul>
 
       <h3>Founder &amp; Project Manager</h3>
       <p class="meta" style="--zone-c:#4b7a55">Kahfi Code · Bandung · Dec 2019 – Present</p>
       <ul>
-        <li>Own the full delivery lifecycle: discovery, scoping, work breakdown, timeline, budget and client acceptance.</li>
+        <li>Run an independent product &amp; software consultancy — own the full delivery lifecycle: discovery, scoping, work breakdown, timeline, budget and client acceptance.</li>
         <li>Primary bridge between client stakeholders and dev teams — business requirements → technical specs.</li>
+        <li>Deliveries: Finnet CPMS Dashboard, ProtonMedika Teleconsultation, RKCTOYS company profile (2021) and an NSF employee-assurance system for Indofood CBP.</li>
       </ul>
 
       <h3>Web Developer</h3>
@@ -92,11 +102,22 @@ export const CV_ZONES = [
       <div class="panel-tag">FEATURED PROJECTS</div>
       <h2>Featured Projects</h2>
 
+      <h3>Grab — Magical Airport Experience</h3>
+      <p class="meta" style="--zone-c:#c8492e">AI-Augmented Minigame</p>
+      <p>Minigame for <b>Grab</b> capturing the chaos of pre-flight preparation to spotlight the pain point and position
+      Grab's product as the fix. Produced end-to-end through a full <b>AI-augmented pipeline</b> across art, design and
+      development — one of the clearest showcases of the division's AI-adoption push.</p>
+
       <h3>Astra Virtue</h3>
       <p class="meta" style="--zone-c:#c8492e">Feb 2024 – Dec 2024 · Unity Metaverse</p>
       <p>Metaverse-based recruitment platform for <b>Astra Group</b> (Indonesia's largest conglomerate, 200+ subsidiaries).
       Led end-to-end redevelopment; two-way real-time communication between candidates and recruiters; grew from an annual
       job fair into permanent multi-event infrastructure.</p>
+
+      <h3>Lenovo Personality Quiz</h3>
+      <p class="meta" style="--zone-c:#c8492e">Interactive Microsite</p>
+      <p>Standalone interactive microsite for <b>Lenovo</b> built around a personality quiz — video content, face tracking
+      and voice recognition guide users through an immersive journey that lands on a personalized device recommendation.</p>
 
       <h3>Finnet CPMS Dashboard</h3>
       <p class="meta" style="--zone-c:#c8492e">Aug 2023 – Jan 2024 · Data Visualization</p>
