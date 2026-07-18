@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#7ec8e3" />
+  <meta name="theme-color" content="#f7efdc" />
   <title>Ihsan Fajari — Off-Road CV</title>
   <meta name="description" content="Interactive 3D off-road CV of Ihsan Fajari. Drive around a low-poly island and discover his experience, projects and skills." />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚙</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect fill='%23f7efdc' width='24' height='24' rx='5'/%3E%3Cg stroke='%23c8492e' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 16V10h9l4 4h3.5a1 1 0 0 1 1 1v1'/%3E%3Cpath d='M9 10V7h5l3 3'/%3E%3Ccircle cx='7.2' cy='17' r='1.8'/%3E%3Ccircle cx='17.5' cy='17' r='1.8'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,700&family=Work+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
   <canvas id="game"></canvas>
@@ -15,8 +18,8 @@
   <div id="intro" class="overlay">
     <div class="intro-card">
       <div class="intro-badge">INTERACTIVE CV · OFF-ROAD EDITION</div>
-      <h1>Ihsan <span>Fajari</span></h1>
-      <p class="intro-sub">Associate Production Director · Bandung, Indonesia</p>
+      <h1>Ihsan <em>Fajari</em></h1>
+      <p class="intro-sub">ASSOCIATE PRODUCTION DIRECTOR · BANDUNG, INDONESIA</p>
       <p class="intro-desc">
         Hop in the truck and explore the island. Five glowing waypoints are scattered
         across the forest, desert, snowy peaks and the beach — each one unlocks a part of my résumé.
@@ -25,11 +28,11 @@
         <div class="ctrl desktop-only"><span class="keys">W A S D</span> Drive</div>
         <div class="ctrl desktop-only"><span class="keys">SPACE</span> Brake / Reverse</div>
         <div class="ctrl desktop-only"><span class="keys">R</span> Reset truck</div>
-        <div class="ctrl mobile-only"><span class="keys">🕹️</span> Joystick on the left side of the screen</div>
+        <div class="ctrl mobile-only"><svg class="icon"><use href="#icon-gamepad"/></svg> Joystick on the left side of the screen</div>
       </div>
-      <button id="startBtn">START ENGINE&nbsp;&nbsp;🚙💨</button>
+      <button id="startBtn"><svg class="icon"><use href="#icon-truck"/></svg>START ENGINE</button>
       <div class="intro-foot">
-        <a href="/Resume-Ihsan-Fajari.pdf" download>⬇ Download classic PDF résumé</a>
+        <a href="/Resume-Ihsan-Fajari.pdf" download><svg class="icon"><use href="#icon-download"/></svg> Download classic PDF résumé</a>
       </div>
     </div>
   </div>
@@ -45,41 +48,41 @@
       <div id="hud-left">
         <div id="hud-name">
           <strong>IHSAN FAJARI</strong>
-          <span>Associate Production Director</span>
+          <span>ASSOCIATE PRODUCTION DIRECTOR</span>
         </div>
         <div id="quest">
-          <span id="quest-arrow">➤</span>
+          <span id="quest-arrow"><svg class="icon"><use href="#icon-arrow"/></svg></span>
           <span id="quest-text">0/5 waypoints</span>
         </div>
       </div>
       <div id="hud-progress"></div>
     </div>
     <div id="hud-bottom">
-      <div id="speedo"><span id="speedVal">0</span><small>km/h</small><div id="odo">0.00 km</div></div>
+      <div id="speedo"><span id="speedVal">0</span><small>KM/H</small><div id="odo">0.00 km</div></div>
       <div id="hint"></div>
-      <button id="resetBtn" title="Reset truck (R)">↺</button>
-      <button id="muteBtn" title="Sound settings">🔊</button>
-      <button id="trophyBtn" title="Achievements">🏆</button>
-      <button id="photoBtn" title="Photo mode — save a postcard">📸</button>
+      <button id="resetBtn" title="Reset truck (R)"><svg class="icon"><use href="#icon-refresh"/></svg></button>
+      <button id="muteBtn" title="Sound settings"><svg class="icon"><use href="#icon-speaker"/></svg></button>
+      <button id="trophyBtn" title="Achievements"><svg class="icon"><use href="#icon-trophy"/></svg></button>
+      <button id="photoBtn" title="Photo mode — save a postcard"><svg class="icon"><use href="#icon-camera"/></svg></button>
       <div id="ach-menu" style="display:none">
-        <div class="sm-title">🏆 Achievements <span id="ach-count"></span><button id="ach-close">✕</button></div>
+        <div class="sm-title"><svg class="icon"><use href="#icon-trophy"/></svg> Achievements <span id="ach-count"></span><button id="ach-close"><svg class="icon"><use href="#icon-close"/></svg></button></div>
         <div id="ach-list"></div>
-        <div id="garage-title">🎨 Garage — paint unlocks with achievements</div>
+        <div id="garage-title"><svg class="icon"><use href="#icon-palette"/></svg> Garage — paint unlocks with achievements</div>
         <div id="skin-list"></div>
       </div>
       <div id="sound-menu" style="display:none">
-        <div class="sm-title">🎚️ Sound Settings <button id="sound-close">✕</button></div>
+        <div class="sm-title"><svg class="icon"><use href="#icon-speaker"/></svg> Sound <button id="sound-close"><svg class="icon"><use href="#icon-close"/></svg></button></div>
         <label class="sm-row">
-          <span>🎵 Music</span>
+          <span>Music</span>
           <input id="bgmSlider" type="range" min="0" max="100" step="1" />
           <b id="bgmPct">100%</b>
         </label>
         <label class="sm-row">
-          <span>🚙 SFX</span>
+          <span>SFX</span>
           <input id="sfxSlider" type="range" min="0" max="100" step="1" />
           <b id="sfxPct">100%</b>
         </label>
-        <button id="muteToggle" class="sm-mute">🔇 Mute all</button>
+        <button id="muteToggle" class="sm-mute">Mute all</button>
       </div>
     </div>
     <div id="toast"></div>
@@ -89,7 +92,7 @@
   <!-- CV panel -->
   <div id="panel" style="display:none">
     <div id="panel-card">
-      <button id="panel-close">✕</button>
+      <button id="panel-close"><svg class="icon"><use href="#icon-close"/></svg></button>
       <div id="panel-content"></div>
     </div>
   </div>
@@ -103,7 +106,7 @@
 
   <!-- Rotate device notice -->
   <div id="rotate" class="overlay" style="display:none">
-    <div class="rotate-box">📱↻<br/>Rotate your phone to landscape<br/>for the best driving experience</div>
+    <div class="rotate-box"><svg class="icon rotate-icon"><use href="#icon-rotate-device"/></svg><br/>Rotate your phone to landscape<br/>for the best driving experience</div>
   </div>
 
   <script type="module" src="/src/main.js"></script>

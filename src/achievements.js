@@ -1,34 +1,35 @@
 // Hidden achievements: the list shows 5 locked slots ("???") until earned.
 // Progress (tree count, odometer) persists in localStorage.
 
+// `icon` is a Rally Roadbook sprite id (src/icons.js).
 export const ACH_DEFS = [
   {
     id: 'trees',
-    icon: '🌲',
+    icon: 'tree',
     name: 'The Timber Car',
     desc: 'Send 15 trees to the sawmill. The island forgives you. Probably.',
   },
   {
     id: 'swim',
-    icon: '🌊',
+    icon: 'wave',
     name: 'This Is Not a Boat',
     desc: 'Discover, experimentally, that the truck cannot swim.',
   },
   {
     id: 'air',
-    icon: '✈️',
+    icon: 'plane',
     name: 'Fajari Airlines',
     desc: 'Enjoy 3 full seconds of uninterrupted flight. Snacks not included.',
   },
   {
     id: 'speed',
-    icon: '🚀',
+    icon: 'rocket',
     name: 'Full Send',
     desc: 'Pin the throttle and hit the truck’s absolute top speed.',
   },
   {
     id: 'dist',
-    icon: '🗺️',
+    icon: 'map',
     name: 'Island Odyssey',
     desc: 'Put 5 km on the odometer. The scenic route counts double.',
   },

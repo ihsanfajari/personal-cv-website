@@ -14,6 +14,7 @@ import { DynamicProps } from './debris.js';
 import { Achievements, ACH_DEFS, SKINS } from './achievements.js';
 import { capturePostcard } from './photo.js';
 import { buildNpc } from './npc.js';
+import { icon } from './icons.js';
 
 // ---------- renderer / scene ----------
 const canvas = document.getElementById('game');
@@ -53,9 +54,9 @@ const audio = new GameAudio();
 // ---------- achievements ----------
 const ach = new Achievements((def) => {
   if (ach.allUnlocked) {
-    ui.toast(`🏆 ${def.icon} ${def.name} — ALL achievements done! 📬 Contact info unlocked at the beach waypoint!`, 7000);
+    ui.toast(`Achievement — ${def.name}! All done: contact info unlocked at the beach waypoint!`, 7000);
   } else {
-    ui.toast(`🏆 ${def.icon} ${def.name} — new paint in the garage! 🎨`, 4500);
+    ui.toast(`Achievement — ${def.name}! New paint in the garage`, 4500);
   }
   audio.fanfare();
   renderAchievements();
@@ -79,8 +80,8 @@ function renderAchievements() {
     const row = document.createElement('div');
     row.className = `ach-row${done ? ' done' : ''}`;
     row.innerHTML = done
-      ? `<div class="ach-icon">${def.icon}</div><div><b>${def.name}</b><p>${def.desc}</p></div>`
-      : `<div class="ach-icon">🔒</div><div><b>? ? ?</b><p>Secret — keep exploring…</p></div>`;
+      ? `<div class="ach-icon">${icon(def.icon)}</div><div><b>${def.name}</b><p>${def.desc}</p></div>`
+      : `<div class="ach-icon">${icon('lock')}</div><div><b>? ? ?</b><p>Secret — keep exploring…</p></div>`;
     achList.appendChild(row);
   }
   renderGarage();
@@ -111,12 +112,12 @@ function renderGarage() {
     sw.className = `skin-swatch${open ? '' : ' locked'}${skin.id === currentSkin ? ' active' : ''}`;
     sw.style.background = skin.color;
     sw.title = open ? skin.name : 'Locked — earn the matching achievement';
-    sw.textContent = open ? '' : '🔒';
+    sw.innerHTML = open ? '' : icon('lock');
     sw.addEventListener('click', () => {
-      if (!open) { ui.toast('🔒 Earn the matching achievement to unlock this paint'); return; }
+      if (!open) { ui.toast('Locked — earn the matching achievement first'); return; }
       applySkin(skin.id);
       renderGarage();
-      ui.toast(`🎨 ${skin.name} applied!`);
+      ui.toast(`${skin.name} applied!`);
     });
     list.appendChild(sw);
   }
@@ -137,7 +138,7 @@ document.getElementById('ach-close').addEventListener('click', () => {
 // ---------- photo / postcard mode ----------
 document.getElementById('photoBtn').addEventListener('click', () => {
   capturePostcard(renderer, scene, camera);
-  ui.toast('📸 Postcard saved — share the ride!');
+  ui.toast('Postcard saved — share the ride!');
 });
 
 // ---------- sound settings menu ----------
@@ -150,8 +151,8 @@ const bgmPct = document.getElementById('bgmPct');
 const sfxPct = document.getElementById('sfxPct');
 
 function syncSoundUI() {
-  muteBtn.textContent = audio.muted ? '🔇' : '🔊';
-  muteToggle.textContent = audio.muted ? '🔊 Unmute' : '🔇 Mute all';
+  muteBtn.innerHTML = icon(audio.muted ? 'speaker-mute' : 'speaker');
+  muteToggle.textContent = audio.muted ? 'Unmute' : 'Mute all';
   muteToggle.classList.toggle('muted', audio.muted);
   bgmSlider.value = Math.round(audio.bgmVol * 100);
   sfxSlider.value = Math.round(audio.sfxVol * 100);
@@ -233,7 +234,7 @@ function buildWorld() {
 
 function resetCar(hard) {
   car.reset(hard);
-  ui.toast(hard ? '↺ Back to the trailhead' : '↺ Truck recovered');
+  ui.toast(hard ? 'Back to the trailhead' : 'Truck recovered');
 }
 
 // ---------- intro flow ----------
@@ -249,7 +250,7 @@ document.getElementById('startBtn').addEventListener('click', () => {
     loading.style.display = 'none';
     ui.showHUD();
     started = true;
-    ui.toast('🚙 Find the 5 glowing waypoints!', 4200);
+    ui.toast('Find the 5 glowing waypoints!', 4200);
   }, 60);
 });
 
@@ -319,7 +320,7 @@ function handleSinking(dt) {
     if (sinkFade > 0.8) {
       car.reset(false);
       sinkFade = 0;
-      ui.toast('🌊 Fished the truck out of the sea!');
+      ui.toast('Fished the truck out of the sea!');
     }
   }
 }

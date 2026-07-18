@@ -6,14 +6,14 @@ import { terrainHeight } from './heightmap.js';
 
 // Placed just off the dirt paths defined in config.js PATH_SEGMENTS.
 const SIGN_DEFS = [
-  { x: 5, z: 27, text: '🚙 You are here. So is the truck.' },
-  { x: 7, z: -17, text: '⛽ Last gas station: none. Enjoy!' },
-  { x: -75, z: -4, text: '🌲 Trees have right of way' },
-  { x: 78, z: 2, text: '🌵 Free cactus hugs — 500 m' },
-  { x: -14, z: -64, text: '🏔️ Snow tires? Never heard of ’em' },
-  { x: -6, z: 90, text: '🏖️ Reminder: trucks can’t swim' },
-  { x: 98, z: 64, text: '🦀 Scenic coastal shortcut. Probably.' },
-  { x: -72, z: -63, text: '⛷️ Peaks shortcut — bring a jacket' },
+  { x: 5, z: 27, text: 'You are here. So is the truck.' },
+  { x: 7, z: -17, text: 'Last gas station: none. Enjoy!' },
+  { x: -75, z: -4, text: 'Trees have right of way' },
+  { x: 78, z: 2, text: 'Free cactus hugs — 500 m' },
+  { x: -14, z: -64, text: 'Snow tires? Never heard of ’em' },
+  { x: -6, z: 90, text: 'Reminder: trucks can’t swim' },
+  { x: 98, z: 64, text: 'Scenic coastal shortcut. Probably.' },
+  { x: -72, z: -63, text: 'Peaks shortcut — bring a jacket' },
 ];
 
 function makeSignTexture(text) {

@@ -2,6 +2,7 @@
 
 import * as THREE from 'three';
 import { CV_ZONES, CONTACT_LOCKED_HTML, CONTACT_UNLOCKED_HTML } from './cv-data.js';
+import { icon } from './icons.js';
 
 export class UI {
   constructor() {
@@ -26,7 +27,7 @@ export class UI {
     for (const z of CV_ZONES) {
       const chip = document.createElement('div');
       chip.className = 'chip';
-      chip.textContent = `${z.emoji} ${z.short}`;
+      chip.innerHTML = `${icon(z.icon)} ${z.short}`;
       chip.title = z.hint;
       this.progressEl.appendChild(chip);
       this.chips[z.id] = chip;
@@ -37,7 +38,7 @@ export class UI {
     for (const z of CV_ZONES) {
       const m = document.createElement('div');
       m.className = 'edge-marker';
-      m.innerHTML = `${z.emoji}<span class="arrow">▲</span>`;
+      m.innerHTML = `${icon(z.icon)}<span class="arrow">${icon('chevron-up')}</span>`;
       m.style.display = 'none';
       this.edgeEl.appendChild(m);
       this.edgeMarkers[z.id] = m;
@@ -95,9 +96,9 @@ export class UI {
   markDiscovered(zone, count, total) {
     this.chips[zone.data.id].classList.add('found');
     if (count >= total) {
-      this.toast(`🏆 All ${total} areas discovered — thanks for the ride!`);
+      this.toast(`All ${total} areas discovered — thanks for the ride!`);
     } else {
-      this.toast(`${zone.data.emoji} ${zone.data.title} discovered! (${count}/${total})`);
+      this.toast(`${zone.data.title} discovered! (${count}/${total})`);
     }
   }
 
@@ -129,7 +130,7 @@ export class UI {
 
     let msg, ang = null;
     if (!nearest) {
-      msg = `🏆 All ${zones.length} waypoints found!`;
+      msg = `All ${zones.length} waypoints found!`;
     } else {
       const range = nearestD < 45 ? 'very close!' : nearestD < 130 ? 'getting close' : 'far off';
       msg = `${found}/${zones.length} waypoints · next: ${range}`;

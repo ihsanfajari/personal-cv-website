@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vite *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "Bash(SHOT_DIR=\"C:\\\\\\\\Users\\\\\\\\bandu\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\claude\\\\\\\\d--Project-Personal-CV-Website\\\\\\\\6622b180-4585-4fa6-a4f5-34dfc4a87282\\\\\\\\scratchpad\" node scripts/smoke.mjs)",
+      "Bash(SHOT_DIR=\"C:\\\\\\\\Users\\\\\\\\bandu\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\claude\\\\\\\\d--Project-Personal-CV-Website\\\\\\\\6622b180-4585-4fa6-a4f5-34dfc4a87282\\\\\\\\scratchpad\" node scripts/shot-ui-states.mjs)",
+      "Skill(update-config)",
+      "Skill(update-config:*)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\bandu\\.claude"
+    ]
+  }
+}

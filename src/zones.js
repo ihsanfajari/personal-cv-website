@@ -1,4 +1,4 @@
-// Discovery beacons: light pillar + floating emoji sign + rotating ring.
+// Discovery beacons: light pillar + floating waypoint sign + rotating ring.
 // Proximity is checked by main.js each frame.
 
 import * as THREE from 'three';
@@ -6,28 +6,43 @@ import { ZONE_POS } from './config.js';
 import { terrainHeight } from './heightmap.js';
 import { CV_ZONES } from './cv-data.js';
 
-function makeLabelTexture(emoji, title) {
+// Rally Roadbook plate: slightly tilted paper card with a hard offset shadow,
+// zone-colored accent bar and the title in the print typefaces — no emoji.
+function makeLabelTexture(title, accent) {
   const c = document.createElement('canvas');
   c.width = 512; c.height = 256;
   const ctx = c.getContext('2d');
 
-  // rounded plate
-  const r = 40, w = 500, h = 150, x = 6, y = 40;
+  const r = 24, w = 470, h = 140, x = 18, y = 48;
+  ctx.translate(c.width / 2, c.height / 2);
+  ctx.rotate(-0.03);
+  ctx.translate(-c.width / 2, -c.height / 2);
+
+  // hard offset "print" shadow
+  ctx.beginPath();
+  ctx.roundRect(x + 10, y + 10, w, h, r);
+  ctx.fillStyle = 'rgba(32,20,10,0.9)';
+  ctx.fill();
+
+  // paper plate + ink border
   ctx.beginPath();
   ctx.roundRect(x, y, w, h, r);
-  ctx.fillStyle = 'rgba(255,253,246,0.96)';
+  ctx.fillStyle = '#fffaf0';
   ctx.fill();
-  ctx.lineWidth = 8;
-  ctx.strokeStyle = 'rgba(29,43,58,0.9)';
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = '#202e3d';
   ctx.stroke();
 
-  ctx.font = '84px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(emoji, 34, y + h / 2 + 6);
+  // zone accent bar on the left edge
+  ctx.beginPath();
+  ctx.roundRect(x + 18, y + 26, 14, h - 52, 7);
+  ctx.fillStyle = accent;
+  ctx.fill();
 
-  ctx.fillStyle = '#1d2b3a';
-  ctx.font = '800 52px "Segoe UI", Arial, sans-serif';
-  ctx.fillText(title, 150, y + h / 2 + 4, 340);
+  ctx.fillStyle = '#202e3d';
+  ctx.textBaseline = 'middle';
+  ctx.font = '700 50px Fraunces, Georgia, serif';
+  ctx.fillText(title, x + 54, y + h / 2 + 3, w - 90);
 
   const tex = new THREE.CanvasTexture(c);
   tex.anisotropy = 4;
@@ -80,7 +95,7 @@ export function buildZones(scene) {
 
     // label sprite
     const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: makeLabelTexture(data.emoji, data.title),
+      map: makeLabelTexture(data.title, data.ui),
       depthTest: false,
       transparent: true,
     }));
