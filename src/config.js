@@ -1,12 +1,18 @@
 // World layout constants shared across modules.
 
-export const WORLD = {
+// Dimensions of the CV island profile.
+export const ISLAND_BOUNDS = {
   size: 520,            // terrain plane width/depth
   segments: 200,        // terrain resolution
   islandRadius: 210,    // full land up to here, then falls into the sea
   islandFade: 250,      // fully underwater beyond this
   waterLevel: 0,
 };
+
+// The dimensions of whichever world is currently loaded. Mutable on purpose:
+// heightmap.setWorld() overwrites these fields when a different world profile
+// is swapped in, and every module that imported WORLD sees the new values.
+export const WORLD = { ...ISLAND_BOUNDS };
 
 export const SPAWN = { x: 0, z: 34, heading: Math.PI }; // facing -z (north, toward About beacon)
 

@@ -136,21 +136,32 @@ function buildCarMesh() {
   return car;
 }
 
+// Sludge: at mud = 1 the truck tops out around half its normal speed and the
+// front end washes out, which is what makes the mud basin cost real time.
+const MUD_DRAG = 1.2;
+const MUD_SLIP = 0.35;
+
 export class Car {
-  constructor(scene, colliderGrid) {
+  // opts: { spawn, maxSpeed, maxReverse, accel, mud } — defaults are the island's.
+  constructor(scene, colliderGrid, opts = {}) {
     this.mesh = buildCarMesh();
     scene.add(this.mesh);
     this.grid = colliderGrid;
 
-    this.pos = new THREE.Vector3(SPAWN.x, terrainHeight(SPAWN.x, SPAWN.z), SPAWN.z);
-    this.heading = SPAWN.heading;
+    this.spawn = opts.spawn ?? SPAWN;
+    this.mudAt = opts.mud ?? null;   // (x, z) => 0..1, set by worlds that have mud
+    this.mud = 0;
+
+    this.pos = new THREE.Vector3(this.spawn.x, terrainHeight(this.spawn.x, this.spawn.z), this.spawn.z);
+    this.heading = this.spawn.heading;
     this.speed = 0;
     this.steerVisual = 0;
     this.vy = 0;             // vertical velocity (jumps)
     this.airborne = false;
+    this._landGrace = 0;     // brief settle after touchdown, see update()
     this.onLand = null;      // (impact 0..1) => void, set by main.js for SFX
 
-    this.lastSafe = new THREE.Vector3(SPAWN.x, 0, SPAWN.z);
+    this.lastSafe = new THREE.Vector3(this.spawn.x, 0, this.spawn.z);
     this._safeTimer = 0;
 
     this._normal = new THREE.Vector3(0, 1, 0);
@@ -161,8 +172,9 @@ export class Car {
     this._mat = new THREE.Matrix4();
     this._colOut = [];
 
-    this.maxSpeed = 26;      // m/s forward
-    this.maxReverse = 9;
+    this.maxSpeed = opts.maxSpeed ?? 26;   // m/s forward
+    this.maxReverse = opts.maxReverse ?? 9;
+    this.accel = opts.accel ?? 15;
     this.sunk = false;
     this.inWater = false;
     this.onImpact = null;    // (intensity 0..1) => void, set by main.js for SFX
@@ -180,10 +192,10 @@ export class Car {
   }
 
   reset(toSpawn = false) {
-    const p = toSpawn ? new THREE.Vector3(SPAWN.x, 0, SPAWN.z) : this.lastSafe;
+    const p = toSpawn ? new THREE.Vector3(this.spawn.x, 0, this.spawn.z) : this.lastSafe;
     this.pos.copy(p);
     this.pos.y = terrainHeight(p.x, p.z);
-    if (toSpawn) this.heading = SPAWN.heading;
+    if (toSpawn) this.heading = this.spawn.heading;
     this.speed = 0;
     this.vy = 0;
     this.airborne = false;
@@ -201,9 +213,11 @@ export class Car {
     const inWater = groundH < WORLD.waterLevel + 0.35;
     const deepWater = groundH < WORLD.waterLevel - 1.2;
     this.inWater = inWater;
+    const mud = this.mudAt ? this.mudAt(this.pos.x, this.pos.z) : 0;
+    this.mud = mud;
 
     // --- longitudinal (wheels only bite on the ground) ---
-    const accel = 15, brakeDecel = 30, drag = 0.9, rollRes = 2.2;
+    const accel = this.accel, brakeDecel = 30, drag = 0.9, rollRes = 2.2;
     if (this.airborne) {
       this.speed *= Math.max(0, 1 - 0.06 * dt); // tiny air drag only
     } else {
@@ -224,12 +238,14 @@ export class Car {
     const sign = Math.sign(this.speed);
     this.speed -= sign * Math.min(Math.abs(this.speed), (rollRes + drag * Math.abs(this.speed) * 0.14) * dt * 10) * 0.1;
     if (inWater) this.speed *= Math.max(0, 1 - 2.5 * dt);
+    if (mud > 0.01) this.speed *= Math.max(0, 1 - MUD_DRAG * mud * dt);
     this.speed = Math.min(this.maxSpeed, Math.max(-this.maxReverse, this.speed));
     if (Math.abs(this.speed) < 0.02 && Math.abs(throttle) < 0.01) this.speed = 0;
     }
 
     // --- steering (no grip mid-air) ---
-    const grip = this.airborne ? 0 : Math.min(1, Math.abs(this.speed) / 5);
+    const grip = this.airborne ? 0
+      : Math.min(1, Math.abs(this.speed) / 5) * (1 - MUD_SLIP * mud);
     const agility = 1.9 * (1 - Math.min(1, Math.abs(this.speed) / this.maxSpeed) * 0.45);
     this.heading -= steer * agility * grip * dt * Math.sign(this.speed || 1);
     this.steerVisual += ((-steer * 0.45) - this.steerVisual) * Math.min(1, dt * 10);
@@ -288,15 +304,20 @@ export class Car {
         this.pos.y = Math.max(hNow, WORLD.waterLevel - 1.4);
         this.airborne = false;
         this.vy = 0;
+        // Landing zeroes vy, but the ground under a landing is often still
+        // falling away fast. Without this settle the very next frame reads
+        // that as another take-off and the truck jackhammers down the slope.
+        this._landGrace = 0.18;
         if (impact > 4.5) {
           this.speed *= Math.max(0.72, 1 - impact * 0.012); // landing scrubs speed
           this.onLand?.(Math.min(1, impact / 16));
         }
       }
     } else {
+      this._landGrace = Math.max(0, this._landGrace - dt);
       const vyFollow = dt > 0 ? (hNow - this.pos.y) / dt : 0;
       // ground falls away faster than gravity can pull us down -> take off
-      if (vyFollow < this.vy - G * dt - 1.5 && Math.abs(this.speed) > 7) {
+      if (this._landGrace === 0 && vyFollow < this.vy - G * dt - 1.5 && Math.abs(this.speed) > 7) {
         this.airborne = true;
         this.vy = Math.max(this.vy - G * dt, -2);
         this.pos.y += this.vy * dt;

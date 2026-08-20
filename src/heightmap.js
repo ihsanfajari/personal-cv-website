@@ -1,80 +1,47 @@
-// Analytic heightfield + biome weights. The car physics and the terrain mesh
-// both sample these functions, so they always agree.
+// Terrain sampling front-end. Every module (car physics, terrain mesh, props,
+// signs) samples the world through here, so swapping the active world profile
+// swaps the whole map underneath them.
+//
+// Profiles live in src/worlds/ (the CV island) and src/race/ (the race track).
+// A profile is `{ id, bounds, info(x, z), mud?(x, z) }`.
 
-import { fbm, ridge, smoothstep, lerp } from './noise.js';
-import { WORLD, PATH_SEGMENTS, PATH_WIDTH } from './config.js';
+import { islandWorld } from './worlds/island.js';
+import { WORLD } from './config.js';
 
-function distToSegment(px, pz, a, b) {
-  const dx = b.x - a.x, dz = b.z - a.z;
-  const len2 = dx * dx + dz * dz;
-  let t = ((px - a.x) * dx + (pz - a.z) * dz) / len2;
-  t = Math.min(1, Math.max(0, t));
-  const cx = a.x + dx * t, cz = a.z + dz * t;
-  return Math.hypot(px - cx, pz - cz);
+let active = islandWorld;
+
+// Swap the active world. `WORLD` in config.js is intentionally a mutable object
+// so the modules that already imported it (car bounds, terrain mesh size) pick
+// up the new profile's dimensions without any extra plumbing.
+export function setWorld(world) {
+  active = world;
+  Object.assign(WORLD, world.bounds);
 }
 
-export function pathMask(x, z) {
-  let d = Infinity;
-  for (const [a, b] of PATH_SEGMENTS) {
-    const dd = distToSegment(x, z, a, b);
-    if (dd < d) d = dd;
-  }
-  return smoothstep(PATH_WIDTH + 9, PATH_WIDTH, d);
-}
-
-// Biome weights sum to 1: { grass, forest, desert, snow, beach }
-export function biomes(x, z) {
-  const wob = (fbm(x * 0.012 + 31.7, z * 0.012 + 7.3, 3) - 0.5) * 55;
-  const snow = smoothstep(-72, -145, z + wob * 0.6);
-  const desert = smoothstep(72, 145, x + wob) * (1 - snow);
-  const forest = smoothstep(-72, -145, x + wob) * (1 - snow) * (1 - desert);
-  const beach = smoothstep(82, 148, z + wob * 0.5) * (1 - snow) * (1 - desert) * (1 - forest);
-  const grass = Math.max(0, 1 - snow - desert - forest - beach);
-  return { grass, forest, desert, snow, beach };
+export function activeWorld() {
+  return active;
 }
 
 // Full terrain info; `height` alone is cheaper via terrainHeight().
 export function terrainInfo(x, z) {
-  const b = biomes(x, z);
-  const path = pathMask(x, z);
-
-  const rolling = (fbm(x * 0.009, z * 0.009, 4) - 0.42) * 13;
-  const detail = (fbm(x * 0.045, z * 0.045, 3) - 0.5) * 2.6;
-  const dunes = ridge(x * 0.016 + z * 0.006, z * 0.02) * 6.5 +
-    (fbm(x * 0.03, z * 0.03, 2) - 0.5) * 2;
-  const mountain = 15 + (fbm(x * 0.013 + 100, z * 0.013, 4) - 0.35) * 42 +
-    ridge(x * 0.03 + 50, z * 0.03) * 5;
-
-  // per-biome target heights
-  const hGrass = 2.2 + rolling + detail;
-  const hForest = 3.0 + rolling * 1.25 + detail;
-  const hDesert = 2.4 + dunes;
-  const hSnow = 2.2 + rolling * 0.4 + Math.max(0, mountain) * b.snow; // ramps up with weight
-  const hBeach = 1.4 + rolling * 0.25 + detail * 0.3;
-
-  let land =
-    b.grass * hGrass + b.forest * hForest + b.desert * hDesert +
-    b.snow * hSnow + b.beach * hBeach;
-
-  // smooth + slightly lower terrain along the dirt path (keeps mountain ramps drivable)
-  if (path > 0.001) {
-    const smoothLand =
-      b.grass * (2.2 + rolling * 0.6) + b.forest * (3.0 + rolling * 0.7) +
-      b.desert * (2.4 + dunes * 0.35) + b.snow * (2.2 + rolling * 0.25 + Math.max(0, mountain) * b.snow * 0.72) +
-      b.beach * 1.4;
-    land = lerp(land, smoothLand, path);
-  }
-
-  // island falloff into the sea
-  const r = Math.hypot(x, z);
-  const inland = smoothstep(WORLD.islandFade, WORLD.islandRadius, r);
-  const height = lerp(-9, land, inland);
-
-  return { height, biomes: b, path, inland };
+  return active.info(x, z);
 }
 
 export function terrainHeight(x, z) {
-  return terrainInfo(x, z).height;
+  return active.info(x, z).height;
+}
+
+export function biomes(x, z) {
+  return active.info(x, z).biomes;
+}
+
+export function pathMask(x, z) {
+  return active.info(x, z).path;
+}
+
+// Sludge factor 0..1 (mud pits, water crossings). Worlds without mud return 0.
+export function terrainMud(x, z) {
+  return active.mud ? active.mud(x, z) : 0;
 }
 
 // Terrain normal via central differences (analytic-friendly, used by car + props).

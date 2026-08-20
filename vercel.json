@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/off-road-racing", "destination": "/off-road-racing/index.html" }
+  ]
+}

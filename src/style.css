@@ -910,3 +910,53 @@ body.touch #joystick-zone { display: block; }
   #panel { align-items: flex-end; justify-content: center; }
   #panel-card { max-height: 72dvh; width: min(520px, 96vw); }
 }
+
+/* ---------- race track gateway prompt ---------- */
+#race-prompt {
+  position: absolute;
+  bottom: 92px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--paper-raised);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  padding: 9px 10px 9px 16px;
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, transform .25s;
+  white-space: nowrap;
+}
+#race-prompt.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+#race-prompt span {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: var(--ink-soft);
+}
+#race-prompt a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-decoration: none;
+  color: #fff8ec;
+  background: var(--rust);
+  border: 1.5px solid var(--ink);
+  border-radius: 9px;
+  padding: 8px 14px;
+  box-shadow: var(--shadow-xs);
+}
+#race-prompt a:hover { background: var(--rust-deep); transform: translate(-1px, -1px); }
+#race-prompt a .icon { width: 15px; height: 15px; }
+
+@media (max-width: 560px) {
+  #race-prompt { bottom: 118px; padding: 7px 8px 7px 12px; gap: 8px; }
+  #race-prompt span { display: none; }
+}

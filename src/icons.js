@@ -5,6 +5,7 @@
 const SPRITE = `
 <svg id="icon-sprite" style="display:none" aria-hidden="true"><defs>
   <symbol id="icon-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M15.3 8.7l-2 4.6-4.6 2 2-4.6z" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="icon-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 2"/><path d="M9.5 2.5h5"/><path d="M12 2.5v3"/></symbol>
   <symbol id="icon-flag" viewBox="0 0 24 24"><path d="M6 3v18"/><path d="M6 4.5h12l-2.4 3.3L18 11H6"/></symbol>
   <symbol id="icon-mountain" viewBox="0 0 24 24"><path d="M2.5 19h19"/><path d="M4 19l6-11 4 6 2-3 4 8"/><circle cx="17.2" cy="6" r="1.5" fill="currentColor" stroke="none"/></symbol>
   <symbol id="icon-peaks" viewBox="0 0 24 24"><path d="M2.5 19h19"/><path d="M4 19l6-11 4 6 2-3 4 8"/><path d="M9.1 10.9l1.3 1.3M18.3 13.3l.9.9"/></symbol>

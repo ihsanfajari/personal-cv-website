@@ -10,6 +10,7 @@ const SIGN_DEFS = [
   { x: 7, z: -17, text: 'Last gas station: none. Enjoy!' },
   { x: -75, z: -4, text: 'Trees have right of way' },
   { x: 78, z: 2, text: 'Free cactus hugs — 500 m' },
+  { x: 52, z: 40, text: 'Race track east — bring a stopwatch' },
   { x: -14, z: -64, text: 'Snow tires? Never heard of ’em' },
   { x: -6, z: 90, text: 'Reminder: trucks can’t swim' },
   { x: 98, z: 64, text: 'Scenic coastal shortcut. Probably.' },

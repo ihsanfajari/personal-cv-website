@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7efdc" />
+  <title>Autumn Ridge — Off-Road Time Trial</title>
+  <meta name="description" content="Drive the Autumn Ridge time trial: 1.7 km of dirt, jumps, a creek crossing and a mud basin. Beat your best time." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect fill='%23f7efdc' width='24' height='24' rx='5'/%3E%3Cg stroke='%23c8492e' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3v18'/%3E%3Cpath d='M6 4.5h12l-2.4 3.3L18 11H6'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,700&family=Work+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <!-- Intro / start screen -->
+  <div id="intro" class="overlay">
+    <div class="intro-card">
+      <div class="intro-badge">OFF-ROAD CV · SIDE QUEST</div>
+      <h1>Autumn <em>Ridge</em></h1>
+      <p class="intro-sub">TIME TRIAL · 1.7 KM · START TO FINISH</p>
+      <p class="intro-desc">
+        One run, one clock. Three jumps, a creek crossing and a mud basin between
+        you and the finish line. Five checkpoints split the course — each one is
+        where you rejoin if it all goes wrong, and the clock keeps running.
+      </p>
+      <div class="best-plate">
+        <span>YOUR BEST</span>
+        <b id="intro-best">—:—.——</b>
+      </div>
+      <div class="intro-controls">
+        <div class="ctrl desktop-only"><span class="keys">W A S D</span> Drive</div>
+        <div class="ctrl desktop-only"><span class="keys">SPACE</span> Brake / Reverse</div>
+        <div class="ctrl desktop-only"><span class="keys">R</span> Back to last checkpoint</div>
+        <div class="ctrl mobile-only"><svg class="icon"><use href="#icon-gamepad"/></svg> Joystick on the left side of the screen</div>
+      </div>
+      <button id="startBtn"><svg class="icon"><use href="#icon-flag"/></svg>LINE UP AT THE START</button>
+      <div class="intro-foot">
+        <a href="/"><svg class="icon"><use href="#icon-arrow"/></svg> Back to the CV island</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading indicator -->
+  <div id="loading" class="overlay" style="display:none">
+    <div class="loading-box"><div class="spinner"></div>Grading the course…</div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud" style="display:none">
+    <div id="race-top">
+      <div id="cp-counter">CKPNT <b>0/5</b></div>
+      <div id="timer">0:00<small>.00</small></div>
+    </div>
+
+    <a id="back-link" href="/"><svg class="icon"><use href="#icon-arrow"/></svg> CV island</a>
+
+    <div id="minimap-wrap">
+      <canvas id="minimap" width="220" height="220"></canvas>
+    </div>
+
+    <div id="hud-bottom">
+      <div id="speedo"><span id="speedVal">0</span><small>KM/H</small><div id="odo">0 m</div></div>
+      <div id="hint"></div>
+      <button id="resetBtn" title="Back to last checkpoint (R)"><svg class="icon"><use href="#icon-refresh"/></svg></button>
+      <button id="muteBtn" title="Sound settings"><svg class="icon"><use href="#icon-speaker"/></svg></button>
+      <button id="photoBtn" title="Save a photo of the run"><svg class="icon"><use href="#icon-camera"/></svg></button>
+      <div id="sound-menu" style="display:none">
+        <div class="sm-title"><svg class="icon"><use href="#icon-speaker"/></svg> Sound <button id="sound-close"><svg class="icon"><use href="#icon-close"/></svg></button></div>
+        <label class="sm-row">
+          <span>Music</span>
+          <input id="bgmSlider" type="range" min="0" max="100" step="1" />
+          <b id="bgmPct">100%</b>
+        </label>
+        <label class="sm-row">
+          <span>SFX</span>
+          <input id="sfxSlider" type="range" min="0" max="100" step="1" />
+          <b id="sfxPct">100%</b>
+        </label>
+        <button id="muteToggle" class="sm-mute">Mute all</button>
+      </div>
+    </div>
+
+    <div id="countdown"></div>
+    <div id="wrongway">WRONG WAY</div>
+    <div id="toast"></div>
+  </div>
+
+  <!-- Result card -->
+  <div id="result" class="overlay" style="display:none">
+    <div class="result-card">
+      <div class="intro-badge" id="result-badge">RUN COMPLETE</div>
+      <h2 id="result-title">Autumn Ridge</h2>
+      <div id="result-time">0:00.00</div>
+      <div id="result-best"></div>
+      <div id="result-splits"></div>
+      <div class="result-actions">
+        <button id="againBtn"><svg class="icon"><use href="#icon-refresh"/></svg>RACE AGAIN</button>
+        <button id="cardBtn" class="ghost"><svg class="icon"><use href="#icon-camera"/></svg>SAVE FINISH CARD</button>
+      </div>
+      <div class="intro-foot">
+        <a href="/"><svg class="icon"><use href="#icon-arrow"/></svg> Back to the CV island</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile joystick -->
+  <div id="joystick-zone">
+    <div id="joystick-base" style="display:none">
+      <div id="joystick-knob"></div>
+    </div>
+  </div>
+
+  <!-- Rotate device notice -->
+  <div id="rotate" class="overlay" style="display:none">
+    <div class="rotate-box"><svg class="icon rotate-icon"><use href="#icon-rotate-device"/></svg><br/>Rotate your phone to landscape<br/>for the best driving experience</div>
+  </div>
+
+  <script type="module" src="/src/race/main.js"></script>
+</body>
+</html>

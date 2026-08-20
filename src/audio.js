@@ -281,6 +281,21 @@ export class GameAudio {
     n.start(t); n.stop(t + 0.2);
   }
 
+  // Countdown pip. Used by the race start lights: three low, one high.
+  beep(freq = 660, dur = 0.16, vol = 0.2) {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const o = this.ctx.createOscillator();
+    o.type = 'square';
+    o.frequency.value = freq;
+    const g = this.ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g); g.connect(this.master);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+
   fanfare() {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;

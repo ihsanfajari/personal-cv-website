@@ -14,6 +14,7 @@ import { DynamicProps } from './debris.js';
 import { Achievements, ACH_DEFS, SKINS } from './achievements.js';
 import { capturePostcard } from './photo.js';
 import { buildNpc } from './npc.js';
+import { buildRaceGate, updateRaceGate } from './racegate.js';
 import { icon } from './icons.js';
 
 // ---------- renderer / scene ----------
@@ -195,6 +196,8 @@ let sea = null;
 let clouds = null;
 let debris = null;
 let npc = null;
+let raceGate = null;
+const racePrompt = document.getElementById('race-prompt');
 
 // ---------- deferred world build (keeps first paint fast) ----------
 function buildWorld() {
@@ -228,6 +231,7 @@ function buildWorld() {
   zones = buildZones(scene);
   signs = buildSigns(scene);
   npc = buildNpc(scene);
+  raceGate = buildRaceGate(scene);
   worldReady = true;
   window.__game = { car, controls, zones, audio, debris, ach, npc }; // debug/testing hook
 }
@@ -342,6 +346,7 @@ function loop() {
     updateCamera(dt);
     animateZones(zones, t, dt, car.pos);
     animateSigns(signs, car.pos);
+    updateRaceGate(raceGate, car.pos, racePrompt);
     npc.update(dt, car.pos);
     sea.userData.update(t);
     clouds.userData.update(dt);
